@@ -1,4 +1,5 @@
 use std::fs::read_to_string;
+use check_your_pin::easy::clear;
 use rpassword::prompt_password;
 
 fn open_pins_file<S: AsRef<str>>(file_name: S) -> Vec<String> {
@@ -38,20 +39,27 @@ fn get_percentage(useful: u64, total: u64) -> u64 {
 }
 
 fn main() -> Result<(), String>{
+  clear();
+loop {
   let content: Vec<String> = open_pins_file("pins.txt"); 
   println!("Check your 4 numeric pin frequency!!");
   let pin: String = prompt_password("Password: ").expect("Cannot get password");
   // let pin:String = "1234".to_owned();
 
-  if pin.len() != 4 { return Err(String::from("Pin length needs to be 4 digits")); }
+  if pin.len() != 4 {
+    clear();
+    println!("Please enter a 4 digit number");
+    continue;
+  } 
   match pin.parse::<u64>() {
     Ok(_) => {},
-    Err(e) => panic!("Please enter a 4 digit number: {}", e)
+    Err(e) => panic!("Parsing error: {}", e) 
   }
   
   let pos = linear_search(&content, &pin);
   println!("Part of the {:?}% of the easist passwords", get_percentage(pos.clone(), content.clone().len() as u64 ));
   println!("Is guessed {:?}th out of a total of {:?} pins", pos.clone(),  content.len());
 
-  Ok(())
+  return Ok(());
+}
 }

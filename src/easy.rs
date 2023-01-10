@@ -1,4 +1,4 @@
-use std::io::{Write, Read};
+use std::io::Write;
 
 pub fn input<S: AsRef<str>>(prompt: Option<S>) -> String {
   let stdin = std::io::stdin();
@@ -20,4 +20,9 @@ pub fn input<S: AsRef<str>>(prompt: Option<S>) -> String {
 
   stdout.flush().expect("Cannot flush STDOUT");
   input[0..input.len()-2].to_string()
+}
+
+pub fn clear() {
+  //clears the screen
+  print!("\x1B[2J\x1B[1;1H");
 }
